@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="66s-PG-1TQ">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="DDZ-bj-DSK">
+            <objects>
+                <viewController id="66s-PG-1TQ" customClass="ViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Acf-70-rc8"/>
+                        <viewControllerLayoutGuide type="bottom" id="WVg-cG-GXG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dwr-aY-sE3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="proteine" translatesAutoresizingMaskIntoConstraints="NO" id="bD3-6F-koM">
+                                <rect key="frame" x="67" y="269" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="30n-pS-z0B"/>
+                                    <constraint firstAttribute="height" constant="128" id="cZN-Zk-hil"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YE3-c5-5n8">
+                                <rect key="frame" x="187" y="623" width="0.0" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKY-ZY-ocb">
+                                <rect key="frame" x="137" y="407" width="100" height="108"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES"/>
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <state key="normal" image="empreinte_digitale"/>
+                                <connections>
+                                    <action selector="touchMe:" destination="66s-PG-1TQ" eventType="touchUpInside" id="6tJ-Nq-f3d"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bD3-6F-koM" firstAttribute="centerY" secondItem="Dwr-aY-sE3" secondAttribute="centerY" id="YPz-pP-Oal"/>
+                            <constraint firstItem="bD3-6F-koM" firstAttribute="centerX" secondItem="Dwr-aY-sE3" secondAttribute="centerX" id="bvB-eO-w1a"/>
+                            <constraint firstItem="HKY-ZY-ocb" firstAttribute="top" secondItem="bD3-6F-koM" secondAttribute="bottom" constant="10" id="kwq-uA-ep0"/>
+                            <constraint firstItem="WVg-cG-GXG" firstAttribute="top" secondItem="YE3-c5-5n8" secondAttribute="bottom" constant="44" id="vZf-bH-ta3"/>
+                            <constraint firstItem="YE3-c5-5n8" firstAttribute="centerX" secondItem="Dwr-aY-sE3" secondAttribute="centerX" id="xfJ-NK-b9B"/>
+                            <constraint firstItem="HKY-ZY-ocb" firstAttribute="centerX" secondItem="Dwr-aY-sE3" secondAttribute="centerX" id="yAZ-X2-x76"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="message" destination="YE3-c5-5n8" id="T8K-l6-4CZ"/>
+                        <outlet property="touchButton" destination="HKY-ZY-ocb" id="bkc-s7-4Yt"/>
+                        <segue destination="aiD-Qc-lUG" kind="show" identifier="SegueToSecond" id="JtS-Y0-eUU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t7x-pY-e53" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1498.4000000000001" y="119.1904047976012"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="2CC-Fn-dp5">
+            <objects>
+                <tableViewController id="aiD-Qc-lUG" customClass="TableViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wEN-MT-GQ6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="wXu-Fk-Cip">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wXu-Fk-Cip" id="dKM-2v-HBp">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="aiD-Qc-lUG" id="GfK-DE-A4x"/>
+                            <outlet property="delegate" destination="aiD-Qc-lUG" id="PyZ-UG-gT8"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P0m-FC-ztb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-697" y="123"/>
+        </scene>
+        <!--Game View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                    <sceneKitView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </sceneKitView>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="55" y="119"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="empreinte_digitale" width="100" height="108"/>
+        <image name="proteine" width="372" height="334"/>
+    </resources>
+</document>
