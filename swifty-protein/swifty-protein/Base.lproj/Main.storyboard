@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="DDZ-bj-DSK">
             <objects>
-                <viewController id="66s-PG-1TQ" customClass="ViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="initialViewController" id="66s-PG-1TQ" customClass="ViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Acf-70-rc8"/>
                         <viewControllerLayoutGuide type="bottom" id="WVg-cG-GXG"/>

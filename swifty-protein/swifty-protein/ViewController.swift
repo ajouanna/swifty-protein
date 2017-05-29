@@ -63,4 +63,12 @@ class ViewController: UIViewController {
         message.text = NSLocalizedString("Unexpected error! 😱", comment: "Message for unexpected error")
     }
     
+    
+    func application(application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+        return false
+    }
+    
+    func application(application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        return false
+    }
 }
