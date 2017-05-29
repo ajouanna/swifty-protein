@@ -66,10 +66,10 @@
             </objects>
             <point key="canvasLocation" x="-1498.4000000000001" y="119.1904047976012"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Ligands-->
         <scene sceneID="2CC-Fn-dp5">
             <objects>
-                <tableViewController id="aiD-Qc-lUG" customClass="TableViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Ligands" id="aiD-Qc-lUG" customClass="TableViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wEN-MT-GQ6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

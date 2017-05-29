@@ -8,9 +8,12 @@
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
 
     var ligands : [String] = []
+    var filteredData:[String] = []
+    var searchController:UISearchController = UISearchController(searchResultsController: nil)
+    var shouldShowSearchResults = false
     
     func populateLigands() {
         
@@ -36,6 +39,13 @@ class TableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         populateLigands()
+      
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search here..."
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,8 +61,12 @@ class TableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return self.ligands.count
+        if shouldShowSearchResults {
+            return filteredData.count
+        }
+        else {
+            return ligands.count
+        }
     }
 
     
@@ -60,12 +74,50 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ligandCellId", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = ligands[indexPath.row]
 
+        if shouldShowSearchResults {
+            cell.textLabel?.text = filteredData[indexPath.row]
+        }
+        else {
+            cell.textLabel?.text = ligands[indexPath.row]
+        }
+        
         return cell
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        shouldShowSearchResults = true
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        shouldShowSearchResults = false
+        tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if !shouldShowSearchResults {
+            shouldShowSearchResults = true
+            tableView.reloadData()
+        }
+        
+        searchController.searchBar.resignFirstResponder()
+    }
 
+    func updateSearchResults(for: UISearchController) {
+        let searchString = searchController.searchBar.text
+        
+        // Filter the data array and get only those strings that match the search text.
+        filteredData = ligands.filter({ (lig) -> Bool in
+            let ligText: String = lig
+            
+            return (ligText.lowercased().range(of: searchString!.lowercased()) != nil)
+        })
+        
+        // Reload the tableview.
+        tableView.reloadData()
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
