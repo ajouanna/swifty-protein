@@ -12,8 +12,10 @@ import SceneKit
 class GameViewController: UIViewController {
     var scnView: SCNView!
     var scnScene: SCNScene!
+    var ligand: String!
     
     override func viewDidLoad() {
+        print("viewDidLoad : ligand=\(self.ligand)")
         super.viewDidLoad()
         setupView()
         setupScene()

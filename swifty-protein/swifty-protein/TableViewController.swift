@@ -39,10 +39,10 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         populateLigands()
-      
+    
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search here..."
+        searchController.searchBar.placeholder = NSLocalizedString("Search here...", comment:"search bar placeholder")
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
@@ -84,7 +84,8 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         
         return cell
     }
-    
+
+       
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         shouldShowSearchResults = true
         tableView.reloadData()
@@ -153,14 +154,19 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("prepare for segue")
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if let cell = sender as? UITableViewCell, let gameViewController = segue.destination as? GameViewController {
+            // zoomedPhotoViewController.photoName = galleryItems[indexPath.row].itemImage
+            gameViewController.ligand = cell.textLabel?.text
+        }
     }
-    */
+    
 
 }
