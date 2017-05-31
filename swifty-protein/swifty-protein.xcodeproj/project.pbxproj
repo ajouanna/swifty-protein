@@ -106,7 +106,7 @@
 				TargetAttributes = {
 					4A2E9AF61ED871C500F05168 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = QLJUU6C9TW;
+						DevelopmentTeam = 8VNMU8KG36;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -269,7 +269,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = QLJUU6C9TW;
+				DEVELOPMENT_TEAM = 8VNMU8KG36;
 				INFOPLIST_FILE = "swifty-protein/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Aidvig.swifty-protein";
@@ -282,7 +282,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = QLJUU6C9TW;
+				DEVELOPMENT_TEAM = 8VNMU8KG36;
 				INFOPLIST_FILE = "swifty-protein/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Aidvig.swifty-protein";

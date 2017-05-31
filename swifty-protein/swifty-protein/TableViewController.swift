@@ -164,7 +164,7 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         // Pass the selected object to the new view controller.
         if let cell = sender as? UITableViewCell, let gameViewController = segue.destination as? GameViewController {
             // zoomedPhotoViewController.photoName = galleryItems[indexPath.row].itemImage
-            gameViewController.ligand = cell.textLabel?.text
+            gameViewController.ligand = (cell.textLabel?.text!)!
         }
     }
     
