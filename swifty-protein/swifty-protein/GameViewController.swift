@@ -87,6 +87,7 @@ class Atom : NSObject {
     var y : Float
     var z : Float
     var element : String
+    var color : UIColor
     
     var linkedAtoms : [Int] = []
     init(record : String) {
@@ -99,6 +100,41 @@ class Atom : NSObject {
         self.y = Float(record.substring(from: 38, to: 45).trimmingCharacters(in: .whitespaces))!
         self.z = Float(record.substring(from: 46, to: 53).trimmingCharacters(in: .whitespaces))!
         self.element = record.substring(from: 76, to: 77)
+        // couleurs definies ici : https://en.wikipedia.org/wiki/CPK_coloring
+        switch element {
+        case " H":
+            color = UIColor.white
+        case " C":
+            color = UIColor.black
+        case " N":
+            color = UIColor.blue
+        case " O":
+            color = UIColor.red
+        case " F", "Cl":
+            color = UIColor.green
+        case "Br":
+            color = UIColor.red
+        case " I":
+            color = UIColor.purple
+        case "He", "Ne","Ar","Xe", "Kr":
+            color = UIColor.cyan
+        case " P":
+            color = UIColor.orange
+        case " S":
+            color = UIColor.yellow
+        case " B":
+            color = UIColor.orange
+        case "Li", "Na"," K", "Rb", "Cs", "Fr":
+            color = UIColor.purple
+        case "Be", "Mg", "Ca", "Sr", "Ba", "Ra":
+            color = UIColor.green
+        case "Ti":
+            color = UIColor.darkGray
+        case "Fe":
+            color = UIColor.orange
+        default:
+            color = UIColor.magenta
+        }
     }
     
     func addLink(_ atomSerial : Int) {
@@ -117,6 +153,7 @@ class Atom : NSObject {
 class GameViewController: UIViewController {
     var scnView: SCNView!
     var scnScene: SCNScene!
+    var cameraNode: SCNNode!
     var ligand: String = ""
     var atoms : [Int: Atom] = [:]
     
@@ -161,6 +198,8 @@ class GameViewController: UIViewController {
         getLigand()
        }
    
+
+    
     func processLigandFile(_ data : String) {
         print(data)
         let records : [String] = data.components(separatedBy: "\n")
@@ -225,6 +264,7 @@ class GameViewController: UIViewController {
                     print("Status code de la reponse : \(resp.statusCode)")
                 }
                 self.processLigandFile(returnData!)
+                self.displayLigands()
             }
         }
         task.resume()
@@ -241,10 +281,61 @@ class GameViewController: UIViewController {
     
     func setupView() {
         scnView = self.view as! SCNView
+        scnView.showsStatistics = true
+        scnView.allowsCameraControl = true
+        scnView.autoenablesDefaultLighting = true
     }
 
     func setupScene() {
         scnScene = SCNScene()
         scnView.scene = scnScene
+    }
+    
+    func setupCamera(_ position : SCNVector3) {
+        cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = position
+        scnScene.rootNode.addChildNode(cameraNode)
+    }
+    
+    func displayLigands() {
+        print("displayLigands")
+        var cameraOn = false
+
+        // dessiner les differents atoms
+        for (_, atom) in self.atoms {
+            if cameraOn == false {
+                cameraOn = true
+                let camPos = SCNVector3(atom.x, atom.y, 10 + atom.z)
+                setupCamera(camPos)
+            }
+            drawAtom(atom)
+        }
+    }
+    
+    func drawAtom(_ atom : Atom) {
+        let sphere = SCNSphere(radius: CGFloat(0.5))
+        sphere.materials.first?.diffuse.contents = atom.color
+        let sphereNode = SCNNode(geometry: sphere)
+        scnScene.rootNode.addChildNode(sphereNode)
+        sphereNode.position = SCNVector3(atom.x, atom.y, atom.z)
+        for linked in atom.linkedAtoms {
+            if let b = self.atoms[linked] {
+                drawStick(node: sphereNode, a: atom, b: b)
+            }
+        }
+    }
+    
+    // dessine un baton entre un atome est ceux auxquel il est lie
+    func drawStick(node : SCNNode, a: Atom, b: Atom) {
+        let len = sqrt(pow((b.x - a.x),2) + pow((b.y - a.y),2) + pow((b.z - a.z),2))
+        let stick = SCNCylinder(radius: 0.1, height: CGFloat(len))
+        let stickNode = SCNNode(geometry: stick)
+        node.addChildNode(stickNode)
+        stickNode.position = SCNVector3( 0, len/2, 0)
+        // stickNode.orientation = SCNVector4(x: b.x - a.x, y: b.y - a.y, z: b.z - a.z, w: 0)
+        // stickNode.orientation = SCNVector4(x: b.x, y: b.y, z: b.z, w: 0)
+        
+        
     }
 }
