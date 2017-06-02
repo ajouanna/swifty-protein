@@ -88,7 +88,7 @@ class Atom : NSObject {
     var z : Float
     var element : String
     
-    var linkedAtoms : [Atom]?
+    var linkedAtoms : [Int] = []
     init(record : String) {
         // on recupere un "record" complet et on le transforme en objet
         print("init : record = \(record)")
@@ -101,11 +101,26 @@ class Atom : NSObject {
         self.element = record.substring(from: 76, to: 77)
     }
     
+    func addLink(_ atomSerial : Int) {
+        self.linkedAtoms.append(atomSerial)
+    }
+    
     override var description : String {
-        let str = "serial: \(serial), name: \(name), x: \(x), y: \(y), z: \(z), element: \(element)"
+        var str = "serial: \(serial), name: \(name), x: \(x), y: \(y), z: \(z), element: \(element), links: "
+        for link in self.linkedAtoms {
+            str += "\(link) "
+        }
         return str
     }
-    static func addLinks(conect:String) {
+}
+
+class GameViewController: UIViewController {
+    var scnView: SCNView!
+    var scnScene: SCNScene!
+    var ligand: String = ""
+    var atoms : [Int: Atom] = [:]
+    
+    func addLinks(conect:String) {
         /*
          The CONECT records specify connectivity between atoms for which coordinates are supplied. The connectivity is described using the atom serial number as shown in the entry. CONECT records are mandatory for HET groups (excluding water) and for other bonds not specified in the standard residue connectivity table. These records are generated automatically.
          
@@ -119,17 +134,26 @@ class Atom : NSObject {
          17 - 21        Integer        serial       Serial  number of bonded atom
          22 - 26        Integer        serial       Serial number of bonded atom
          27 - 31        Integer        serial       Serial number of bonded atom
-        */
-        
+         */
+        let atomSerial = Int(conect.substring(from: 6, to: 10).trimmingCharacters(in: .whitespaces))!
+        let firstBondedAtom = Int(conect.substring(from: 11, to: 15).trimmingCharacters(in: .whitespaces))!
+        if let atom = atoms[atomSerial] {
+            atom.addLink(firstBondedAtom)
+            if let secondBondedAtom = Int(conect.substring(from: 16, to: 20).trimmingCharacters(in: .whitespaces)) {
+                atoms[atomSerial]?.addLink(secondBondedAtom)
+            }
+            if let thirdBondedAtom = Int(conect.substring(from: 21, to: 25).trimmingCharacters(in: .whitespaces)) {
+                atom.addLink(thirdBondedAtom)
+            }
+            if let fourthBondedAtom = Int(conect.substring(from: 26, to: 30).trimmingCharacters(in: .whitespaces)) {
+                atom.addLink(fourthBondedAtom)
+            }
+        }
+        else {
+            print("Bizarre, j'ai trouvé un lien pour un atom inconnu... Il est donc ignoré")
+        }
     }
-}
 
-class GameViewController: UIViewController {
-    var scnView: SCNView!
-    var scnScene: SCNScene!
-    var ligand: String = ""
-    var atoms : [Int: Atom] = [:]
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -163,8 +187,7 @@ class GameViewController: UIViewController {
         })
         for conect in conectRecords {
             print("conect : \(conect)")
-            
-            // TODO : modifier les objets de type Atom
+            self.addLinks(conect: conect)
         }
         
         // debug
