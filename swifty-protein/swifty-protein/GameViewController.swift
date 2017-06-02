@@ -10,7 +10,17 @@ import UIKit
 import SceneKit
 import Foundation
 
+// extension pour se simplifier la lecture d'une sous-chaine
 extension String {
+
+    subscript (i: Int) -> Character {
+        return self[index(startIndex, offsetBy: i)]
+    }
+    
+    subscript (i: Int) -> String {
+        return String(self[i] as Character)
+    }
+    
     func substring(from: Int?, to: Int?) -> String {
         if let start = from {
             guard start < self.characters.count else {
@@ -70,29 +80,55 @@ class Atom : NSObject {
      77 - 78        LString(2)    element      Element symbol, right-justified.
      79 - 80        LString(2)    charge       Charge  on the atom.
 */
-    var serial : String
+    var serial : Int
     var name : String
+    var chainID : Character
+    var x : Float
+    var y : Float
+    var z : Float
+    var element : String
     
     var linkedAtoms : [Atom]?
     init(record : String) {
         // on recupere un "record" complet et on le transforme en objet
         print("init : record = \(record)")
-        self.serial = record.substring(from: 6, to: 10)
+        self.serial = Int(record.substring(from: 6, to: 10).trimmingCharacters(in: .whitespaces))!
         self.name = record.substring(from: 12, to: 15)
+        self.chainID = record[21]
+        self.x = Float(record.substring(from: 30, to: 37).trimmingCharacters(in: .whitespaces))!
+        self.y = Float(record.substring(from: 38, to: 45).trimmingCharacters(in: .whitespaces))!
+        self.z = Float(record.substring(from: 46, to: 53).trimmingCharacters(in: .whitespaces))!
+        self.element = record.substring(from: 76, to: 77)
     }
     
     override var description : String {
-        let str = "serial: \(serial), name: \(name)"
+        let str = "serial: \(serial), name: \(name), x: \(x), y: \(y), z: \(z), element: \(element)"
         return str
     }
-    
+    static func addLinks(conect:String) {
+        /*
+         The CONECT records specify connectivity between atoms for which coordinates are supplied. The connectivity is described using the atom serial number as shown in the entry. CONECT records are mandatory for HET groups (excluding water) and for other bonds not specified in the standard residue connectivity table. These records are generated automatically.
+         
+         Record Format
+         
+         COLUMNS       DATA  TYPE      FIELD        DEFINITION
+         -------------------------------------------------------------------------
+         1 -  6        Record name    "CONECT"
+         7 - 11       Integer        serial       Atom  serial number
+         12 - 16        Integer        serial       Serial number of bonded atom
+         17 - 21        Integer        serial       Serial  number of bonded atom
+         22 - 26        Integer        serial       Serial number of bonded atom
+         27 - 31        Integer        serial       Serial number of bonded atom
+        */
+        
+    }
 }
 
 class GameViewController: UIViewController {
     var scnView: SCNView!
     var scnScene: SCNScene!
     var ligand: String = ""
-    var atoms : [Atom] = []
+    var atoms : [Int: Atom] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,11 +148,12 @@ class GameViewController: UIViewController {
         })
         
         // on remet la liste a zero
-        self.atoms = []
+        self.atoms = [:]
         // on charge la liste des atomes
         for atom in atomRecords {
             print("atom : \(atom)")
-            self.atoms.append(Atom(record: atom))
+            let index = Int(atom.substring(from: 6, to: 10).trimmingCharacters(in: .whitespaces))!
+            self.atoms[index] = Atom(record: atom)
         }
         // je recupere tous les records de type CONECT
         searchString = "CONECT"
@@ -126,6 +163,7 @@ class GameViewController: UIViewController {
         })
         for conect in conectRecords {
             print("conect : \(conect)")
+            
             // TODO : modifier les objets de type Atom
         }
         
