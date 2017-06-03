@@ -306,7 +306,7 @@ class GameViewController: UIViewController {
         for (_, atom) in self.atoms {
             if cameraOn == false {
                 cameraOn = true
-                let camPos = SCNVector3(atom.x, atom.y, 10 + atom.z)
+                let camPos = SCNVector3(atom.x, atom.y, 15 + atom.z)
                 setupCamera(camPos)
             }
             drawAtom(atom)
@@ -328,14 +328,14 @@ class GameViewController: UIViewController {
     
     // dessine un baton entre un atome est ceux auxquel il est lie
     func drawStick(node : SCNNode, a: Atom, b: Atom) {
+        /*
         let len = sqrt(pow((b.x - a.x),2) + pow((b.y - a.y),2) + pow((b.z - a.z),2))
         let stick = SCNCylinder(radius: 0.1, height: CGFloat(len))
         let stickNode = SCNNode(geometry: stick)
         node.addChildNode(stickNode)
         stickNode.position = SCNVector3( 0, len/2, 0)
         // stickNode.orientation = SCNVector4(x: b.x - a.x, y: b.y - a.y, z: b.z - a.z, w: 0)
-        // stickNode.orientation = SCNVector4(x: b.x, y: b.y, z: b.z, w: 0)
-        
+        */
         
     }
 }
