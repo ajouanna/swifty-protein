@@ -96,7 +96,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="BV1-FR-VrT" kind="show" identifier="3DSegueId" id="Cze-ZZ-TX3"/>
+                                    <segue destination="05t-uA-6h7" kind="show" id="3sI-V6-OaJ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -122,30 +122,48 @@
             </objects>
             <point key="canvasLocation" x="210.1449275362319" y="122.28260869565219"/>
         </scene>
-        <!--3D view-->
-        <scene sceneID="tXr-a1-R10">
+        <!--Game View Controller-->
+        <scene sceneID="QgC-Z1-uo4">
             <objects>
-                <viewController title="3D view" id="BV1-FR-VrT" customClass="GameViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
-                    <sceneKitView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" playing="YES" allowsCameraControl="YES" id="6Dx-fw-NlS">
+                <viewController id="05t-uA-6h7" customClass="GameViewController" customModule="swifty_protein" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wKe-29-pA2"/>
+                        <viewControllerLayoutGuide type="bottom" id="cn5-y0-wU8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SF0-DW-RA0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </sceneKitView>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ligand" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SVJ-kg-FrO">
+                                <rect key="frame" x="0.66666666666665719" y="715.66666666666652" width="414" height="20.333333333333371"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Rwq-K0-yuy">
+                                <rect key="frame" x="0.0" y="64" width="414" height="650.66666666666663"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </sceneKitView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Rwq-K0-yuy" firstAttribute="width" secondItem="SF0-DW-RA0" secondAttribute="width" id="437-va-05O"/>
+                            <constraint firstItem="Rwq-K0-yuy" firstAttribute="centerX" secondItem="SF0-DW-RA0" secondAttribute="centerX" id="6az-GN-YdI"/>
+                            <constraint firstItem="SVJ-kg-FrO" firstAttribute="top" secondItem="Rwq-K0-yuy" secondAttribute="bottom" constant="1" id="9lL-x3-lbb"/>
+                            <constraint firstItem="Rwq-K0-yuy" firstAttribute="top" secondItem="wKe-29-pA2" secondAttribute="bottom" id="KMj-XY-BI3"/>
+                            <constraint firstItem="cn5-y0-wU8" firstAttribute="top" secondItem="SVJ-kg-FrO" secondAttribute="bottom" id="fUi-bi-8ko"/>
+                            <constraint firstItem="SVJ-kg-FrO" firstAttribute="centerX" secondItem="Rwq-K0-yuy" secondAttribute="centerX" id="oHw-ym-OMU"/>
+                            <constraint firstItem="SVJ-kg-FrO" firstAttribute="width" secondItem="SF0-DW-RA0" secondAttribute="width" id="xsn-RN-WVE"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="msg" destination="SVJ-kg-FrO" id="qhW-Uc-IT4"/>
+                        <outlet property="scnView" destination="Rwq-K0-yuy" id="3zZ-di-0P0"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="knA-wQ-mjN">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZUz-US-pTV">
-                    <rect key="frame" x="0.0" y="0.0" width="42" height="21"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="THe-ED-alG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="960.86956521739137" y="118.20652173913044"/>
+            <point key="canvasLocation" x="937.68115942028987" y="120.65217391304348"/>
         </scene>
         <!--Coucou-->
         <scene sceneID="kzB-0M-EV9">

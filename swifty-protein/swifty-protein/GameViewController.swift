@@ -221,16 +221,22 @@ class Atom : NSObject {
     }
 }
 
-class GameViewController: UIViewController {
-    var scnView: SCNView!
+class GameViewController: UIViewController, UIGestureRecognizerDelegate {
+    @IBOutlet weak var scnView: SCNView!
     var scnScene: SCNScene!
     var cameraNode: SCNNode!
     var ligand: String = ""
     var atoms : [Int: Atom] = [:]
     
+    @IBOutlet weak var msg: UILabel! // pour afficher le nom du ligand ou de l'atome
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
     func addLinks(conect:String) {
         /*
-         The CONECT records specify connectivity between atoms for which coordinates are supplied. 
+         The CONECT records specify connectivity between atoms for which coordinates are supplied.
          The connectivity is described using the atom serial number as shown in the entry. 
          CONECT records are mandatory for HET groups (excluding water) and for other bonds not specified in the standard residue connectivity table. 
          These records are generated automatically.
@@ -265,21 +271,27 @@ class GameViewController: UIViewController {
         }
     }
 
+    // initialisation de la reconnaissance d'un clic sur un objet graphique pour afficher son nom
     func initTapGestures() {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.numberOfTapsRequired = 2
         tapRecognizer.numberOfTouchesRequired = 1
         tapRecognizer.addTarget(self, action: #selector(sceneTapped(recognizer:)))
-        scnView.gestureRecognizers = [tapRecognizer]
         
+        var gestureRecognizers = [tapRecognizer as UIGestureRecognizer]
+        if let arr = scnView.gestureRecognizers { // il existe deja des gestes
+            gestureRecognizers = arr + gestureRecognizers // je mets mon geste en dernier (sinon il n'est pa reconnu)
+        }
+        scnView.gestureRecognizers = gestureRecognizers
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        msg.text = "Ligand : " + ligand
         setupView()
         setupScene()
         getLigand()
-        // initTapGestures()
+        initTapGestures()
        }
    
     func sceneTapped(recognizer: UITapGestureRecognizer) {
@@ -289,8 +301,9 @@ class GameViewController: UIViewController {
         if hitResults.count > 0 {
             let result = hitResults[0] 
             let node = result.node
-
-            // node.removeFromParentNode()
+            if let name = node.name {
+                msg.text = NSLocalizedString("Atom : ", comment:"Atom") + name
+            }
         }
     }
     
@@ -374,7 +387,7 @@ class GameViewController: UIViewController {
     }
     
     func setupView() {
-        scnView = self.view as! SCNView
+        // scnView = self.view as! SCNView
         scnView.showsStatistics = true
         scnView.allowsCameraControl = true
         scnView.autoenablesDefaultLighting = true
@@ -424,6 +437,7 @@ class GameViewController: UIViewController {
                     radius: 0.1,
                     radSegmentCount: 10,
                     color:UIColor.white)
+                stick.name = NSLocalizedString("link", comment: "Name of link")
                 scnScene.rootNode.addChildNode(stick)
             }
         }
