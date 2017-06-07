@@ -58,6 +58,77 @@ extension String {
     }
 }
 
+// vu sur https://stackoverflow.com/questions/30190171/scenekit-object-between-two-points/38043369#38043369
+
+class   CylinderLine: SCNNode
+{
+    init( parent: SCNNode,//Needed to line to your scene
+        v1: SCNVector3,//Source
+        v2: SCNVector3,//Destination
+        radius: CGFloat,// Radius of the cylinder
+        radSegmentCount: Int, // Number of faces of the cylinder
+        color: UIColor )// Color of the cylinder
+    {
+        super.init()
+        
+        //Calcul the height of our line
+        let  height = v1.distance(receiver: v2)
+        
+        //set position to v1 coordonate
+        position = v1
+        
+        //Create the second node to draw direction vector
+        let nodeV2 = SCNNode()
+        
+        //define his position
+        nodeV2.position = v2
+        //add it to parent
+        parent.addChildNode(nodeV2)
+        
+        //Align Z axis
+        let zAlign = SCNNode()
+        zAlign.eulerAngles.x = Float(CGFloat(M_PI_2))
+        
+        //create our cylinder
+        let cyl = SCNCylinder(radius: radius, height: CGFloat(height))
+        cyl.radialSegmentCount = radSegmentCount
+        cyl.firstMaterial?.diffuse.contents = color
+        
+        //Create node with cylinder
+        let nodeCyl = SCNNode(geometry: cyl )
+        nodeCyl.position.y = -height/2
+        zAlign.addChildNode(nodeCyl)
+        
+        //Add it to child
+        addChildNode(zAlign)
+        
+        //set constraint direction to our vector
+        constraints = [SCNLookAtConstraint(target: nodeV2)]
+    }
+    
+    override init() {
+        super.init()
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
+private extension SCNVector3{
+    func distance(receiver:SCNVector3) -> Float{
+        let xd = receiver.x - self.x
+        let yd = receiver.y - self.y
+        let zd = receiver.z - self.z
+        let distance = Float(sqrt(xd * xd + yd * yd + zd * zd))
+        
+        if (distance < 0){
+            return (distance * -1)
+        } else {
+            return (distance)
+        }
+    }
+}
+
 class Atom : NSObject {
 /*
      Record Format
@@ -107,15 +178,15 @@ class Atom : NSObject {
         case " C":
             color = UIColor.black
         case " N":
-            color = UIColor.blue
+            color = UIColor(red: 0, green: 0, blue: 0xFF, alpha:1) // dark blue
         case " O":
             color = UIColor.red
         case " F", "Cl":
             color = UIColor.green
         case "Br":
-            color = UIColor.red
+            color = UIColor(red: 0x99, green: 0, blue: 0, alpha:1) // dark red
         case " I":
-            color = UIColor.purple
+            color = UIColor(red: 0x33, green: 0x00, blue: 0x99, alpha:1) // dark violet
         case "He", "Ne","Ar","Xe", "Kr":
             color = UIColor.cyan
         case " P":
@@ -123,17 +194,17 @@ class Atom : NSObject {
         case " S":
             color = UIColor.yellow
         case " B":
-            color = UIColor.orange
+            color = UIColor(red: 0xFF, green: 0x99, blue: 0x66, alpha:1) // peach
         case "Li", "Na"," K", "Rb", "Cs", "Fr":
             color = UIColor.purple
         case "Be", "Mg", "Ca", "Sr", "Ba", "Ra":
-            color = UIColor.green
+            color = UIColor(red: 0x00, green: 0x66, blue: 0x00, alpha:1) // dark green
         case "Ti":
-            color = UIColor.darkGray
+            color = UIColor.gray
         case "Fe":
-            color = UIColor.orange
+            color = UIColor(red: 0xFF, green: 0x66, blue: 0x00, alpha:1) // dark orange
         default:
-            color = UIColor.magenta
+            color = UIColor(red: 0xFF, green: 0x33, blue: 0xFF, alpha:1) // pink
         }
     }
     
@@ -159,7 +230,10 @@ class GameViewController: UIViewController {
     
     func addLinks(conect:String) {
         /*
-         The CONECT records specify connectivity between atoms for which coordinates are supplied. The connectivity is described using the atom serial number as shown in the entry. CONECT records are mandatory for HET groups (excluding water) and for other bonds not specified in the standard residue connectivity table. These records are generated automatically.
+         The CONECT records specify connectivity between atoms for which coordinates are supplied. 
+         The connectivity is described using the atom serial number as shown in the entry. 
+         CONECT records are mandatory for HET groups (excluding water) and for other bonds not specified in the standard residue connectivity table. 
+         These records are generated automatically.
          
          Record Format
          
@@ -191,14 +265,34 @@ class GameViewController: UIViewController {
         }
     }
 
+    func initTapGestures() {
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.numberOfTapsRequired = 2
+        tapRecognizer.numberOfTouchesRequired = 1
+        tapRecognizer.addTarget(self, action: #selector(sceneTapped(recognizer:)))
+        scnView.gestureRecognizers = [tapRecognizer]
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupScene()
         getLigand()
+        // initTapGestures()
        }
    
+    func sceneTapped(recognizer: UITapGestureRecognizer) {
+        let location = recognizer.location(in: scnView)
+        print("sceneTapped : location = \(location)")
+        let hitResults = scnView.hitTest(location, options: nil)
+        if hitResults.count > 0 {
+            let result = hitResults[0] 
+            let node = result.node
 
+            // node.removeFromParentNode()
+        }
+    }
     
     func processLigandFile(_ data : String) {
         print(data)
@@ -296,6 +390,7 @@ class GameViewController: UIViewController {
         cameraNode.camera = SCNCamera()
         cameraNode.position = position
         scnScene.rootNode.addChildNode(cameraNode)
+
     }
     
     func displayLigands() {
@@ -317,25 +412,20 @@ class GameViewController: UIViewController {
         let sphere = SCNSphere(radius: CGFloat(0.5))
         sphere.materials.first?.diffuse.contents = atom.color
         let sphereNode = SCNNode(geometry: sphere)
+        sphereNode.name = atom.element // le nom de l'atome est stocke ici
         scnScene.rootNode.addChildNode(sphereNode)
         sphereNode.position = SCNVector3(atom.x, atom.y, atom.z)
         for linked in atom.linkedAtoms {
             if let b = self.atoms[linked] {
-                drawStick(node: sphereNode, a: atom, b: b)
+                let stick = CylinderLine(
+                    parent: scnScene.rootNode,
+                    v1: SCNVector3(atom.x, atom.y, atom.z),
+                    v2:SCNVector3(b.x, b.y, b.z),
+                    radius: 0.1,
+                    radSegmentCount: 10,
+                    color:UIColor.white)
+                scnScene.rootNode.addChildNode(stick)
             }
         }
-    }
-    
-    // dessine un baton entre un atome est ceux auxquel il est lie
-    func drawStick(node : SCNNode, a: Atom, b: Atom) {
-        /*
-        let len = sqrt(pow((b.x - a.x),2) + pow((b.y - a.y),2) + pow((b.z - a.z),2))
-        let stick = SCNCylinder(radius: 0.1, height: CGFloat(len))
-        let stickNode = SCNNode(geometry: stick)
-        node.addChildNode(stickNode)
-        stickNode.position = SCNVector3( 0, len/2, 0)
-        // stickNode.orientation = SCNVector4(x: b.x - a.x, y: b.y - a.y, z: b.z - a.z, w: 0)
-        */
-        
     }
 }
