@@ -38,7 +38,7 @@ class   CylinderLine: SCNNode
         
         //Align Z axis
         let zAlign = SCNNode()
-        zAlign.eulerAngles.x = Float(CGFloat(M_PI_2))
+        zAlign.eulerAngles.x = .pi/2 // Float(CGFloat(M_PI_2))
         
         //create our cylinder
         let cyl = SCNCylinder(radius: radius, height: CGFloat(height))

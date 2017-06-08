@@ -19,6 +19,25 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     var ligand: String = ""
     var atoms : [Int: Atom] = [:]
     
+    @IBAction func share(_ sender: UIButton) {
+        //Set the default sharing message.
+        let message = NSLocalizedString("Hello! This is a beautifull 3D view of ligand ", comment: "Message for picture") + ligand
+        let link = NSURL(string: "http://www.42.fr//")
+        // Screenshot:
+        UIGraphicsBeginImageContextWithOptions(self.view.frame.size, true, 0.0)
+        self.view.drawHierarchy(in: self.view.frame, afterScreenUpdates: false)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        //Set the link, message, image to share.
+        if let link = link, let img = img {
+            let objectsToShare = [message,link,img] as [Any]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+            self.present(activityVC, animated: true, completion: nil)
+        }
+    }
+    
     @IBOutlet weak var msg: UILabel! // pour afficher le nom du ligand ou de l'atome
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -65,7 +84,7 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     // initialisation de la reconnaissance d'un clic sur un objet graphique pour afficher son nom
     func initTapGestures() {
         let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.numberOfTapsRequired = 2
+        tapRecognizer.numberOfTapsRequired = 1
         tapRecognizer.numberOfTouchesRequired = 1
         tapRecognizer.addTarget(self, action: #selector(sceneTapped(recognizer:)))
         
@@ -78,7 +97,10 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        msg.text = "Ligand : " + ligand
+        
+        // arrondir le bouton share
+        
+        msg.text = "Ligand : " + ligand + NSLocalizedString(", please click on atom for description", comment: "Instructions")
         setupView()
         setupScene()
         getLigandFile()
@@ -93,7 +115,7 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
             let result = hitResults[0] 
             let node = result.node
             if let name = node.name {
-                msg.text = NSLocalizedString("Atom : ", comment:"Atom") + name
+                msg.text = NSLocalizedString("Atom: ", comment:"Atom") + name
                 return
             }
         }
@@ -215,7 +237,7 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func drawAtom(_ atom : Atom) {
-        let sphere = SCNSphere(radius: CGFloat(0.4))
+        let sphere = SCNSphere(radius: CGFloat(0.35))
         sphere.materials.first?.diffuse.contents = atom.color
         let sphereNode = SCNNode(geometry: sphere)
         sphereNode.name = atom.element // le nom de l'atome est stocke ici
