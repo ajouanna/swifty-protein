@@ -42,6 +42,7 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
     
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true // permet de ne pas afficher le champ de recherche si on change de vue
         searchController.searchBar.placeholder = NSLocalizedString("Search here...", comment:"search bar placeholder")
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()

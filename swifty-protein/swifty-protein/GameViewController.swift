@@ -18,8 +18,18 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     var cameraNode: SCNNode!
     var ligand: String = ""
     var atoms : [Int: Atom] = [:]
+    @IBAction func share(_ sender: UIBarButtonItem) {
+        userDidTapShare()
+    }
     
-    @IBAction func share(_ sender: UIButton) {
+    @IBOutlet weak var msg: UILabel! // pour afficher le nom du ligand ou de l'atome
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+ 
+    func userDidTapShare()
+    {
         //Set the default sharing message.
         let message = NSLocalizedString("Hello! This is a beautifull 3D view of ligand ", comment: "Message for picture") + ligand
         let link = NSURL(string: "http://www.42.fr//")
@@ -36,12 +46,6 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
             activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
             self.present(activityVC, animated: true, completion: nil)
         }
-    }
-    
-    @IBOutlet weak var msg: UILabel! // pour afficher le nom du ligand ou de l'atome
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
     
     func addLinks(conect:String) {
@@ -98,13 +102,17 @@ class GameViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // arrondir le bouton share
-        
         msg.text = "Ligand : " + ligand + NSLocalizedString(", please click on atom for description", comment: "Instructions")
         setupView()
         setupScene()
         getLigandFile()
         initTapGestures()
+        
+        // ajout d'un bouton share par programme
+        /*
+        let shareBar: UIBarButtonItem = UIBarButtonItem.init(barButtonSystemItem:.action, target: self, action: #selector(GameViewController.userDidTapShare))
+        self.navigationItem.rightBarButtonItem = shareBar
+ */
        }
    
     func sceneTapped(recognizer: UITapGestureRecognizer) {
